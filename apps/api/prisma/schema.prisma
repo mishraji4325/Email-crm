@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(cuid())
+  name       String
+  email      String      @unique
+  password   String
+
+  leads      Lead[]
+  campaigns  Campaign[]
+
+  createdAt  DateTime    @default(now())
+}
+
+model Lead {
+  id          String      @id @default(cuid())
+  name        String
+  company     String?
+  role        String?
+  status      String      @default("new")
+
+  emails      Email[]
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime    @default(now())
+}
+
+model Campaign {
+  id          String      @id @default(cuid())
+  name        String
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime    @default(now())
+}
+
+model Email {
+  id               String      @id @default(cuid())
+  subject          String
+  body             String
+
+  rawOutput        String
+  humanizedOutput  String
+
+  opened           Boolean     @default(false)
+
+  leadId           String
+  lead             Lead        @relation(fields: [leadId], references: [id])
+
+  createdAt        DateTime    @default(now())
+}
