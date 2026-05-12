@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import dotenv from 'dotenv';
 import { AuthRequest, authMiddleware } from './middleware/auth.middleware';
@@ -6,6 +7,13 @@ import { AuthRequest, authMiddleware } from './middleware/auth.middleware';
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 

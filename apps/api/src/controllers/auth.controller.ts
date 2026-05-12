@@ -3,76 +3,64 @@ import { prisma } from "../lib/prisma";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+export async function registerUser(req: Request, res: Response) {
+  try {
+    console.log(req.body);
+    const { name, email, password } = req.body;
 
-export async function registerUser(req:Request, res:Response) {
-    try{
-        const {name, email, password} = req.body;
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
 
-        const existingUser = await prisma.user.findUnique({
-            where:{email},
-        });
-
-        if(existingUser){
-            return res.status(400).json({message: "User already exists"});
-        }
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await prisma.user.create({
-            data:{
-                name,
-                email,
-                password: hashedPassword,
-            },
-        });
-
-        res.status(201).json({message: "User registered successfully", user});
-
-    }catch(error){
-        console.log(error);
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    return res.status(500).json({message: "Internal server error"});
-};
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-export async function loginUser(req:Request, res:Response) {
-    try{
-        const {email , password} = req.body;
+    const user = await prisma.user.create({
+      data: { name, email, password: hashedPassword },
+    });
 
-        const user = await prisma.user.findUnique({
-            where:{email},
-        });
+    return res.status(201).json({ message: "User registered successfully", user });
 
-        if(!user){
-            return res.status(404).json({message: "login failed"});
-        };
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" }); 
+  }
+}
 
-        const isMatch = await bcrypt.compare(password, user.password);
+export async function loginUser(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body;
 
-        if(!isMatch){
-            return res.status(404).json({message: "invalid password"});
-        };
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-        const token = jwt.sign({
-            userId: user.id,
-        },
-        process.env.JWT_SECRET as string,
-    {
-        expiresIn: "7d",
+    if (!user) {
+      return res.status(404).json({ message: "Login failed" });
     }
-        );
 
-        res.json({
-            token , 
-            user:{
-                id:user.id, 
-                name: user.name,
-                email: user.email,
-            },
-        });
-    }catch(error){
-        console.log(error);
-    };
+    const isMatch = await bcrypt.compare(password, user.password);
 
-    return res.status(500).json({message: "Internal server error"});
-};
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" }); 
+    }
+
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "7d" }
+    );
+
+    return res.json({
+      token,
+      user: { id: user.id, name: user.name, email: user.email },
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" }); 
+  }
+}
