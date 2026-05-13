@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes';
+import leadRoutes from './routes/lead.routes';
 import dotenv from 'dotenv';
 import { AuthRequest, authMiddleware } from './middleware/auth.middleware';
 
@@ -18,6 +19,8 @@ app.use(
 app.use(express.json());
 
 app.use('/auth', authRoutes);
+
+app.use('/leads', leadRoutes)
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
