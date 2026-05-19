@@ -16,9 +16,18 @@ export default function Sidebar() {
           Leads
         </a>
 
+        <a href="/dashboard/pipeline">
+          Pipeline
+        </a>
+
         <a href="/dashboard/campaigns">
           Campaigns
         </a>
+        
+        <a href="/dashboard/import">
+          Import Leads
+        </a>
+        
 
       </div>
 

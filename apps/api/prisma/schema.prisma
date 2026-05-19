@@ -8,54 +8,69 @@ datasource db {
 }
 
 model User {
-  id         String      @id @default(cuid())
-  name       String
-  email      String      @unique
-  password   String
+  id               String @id @default(cuid())
+  name             String
+  email            String @unique
+  password         String
 
-  leads      Lead[]
-  campaigns  Campaign[]
+  leads            Lead[]
+  campaigns        Campaign[]
 
-  createdAt  DateTime    @default(now())
+  createdAt        DateTime @default(now())
 }
 
 model Lead {
-  id          String      @id @default(cuid())
-  name        String
-  company     String?
-  role        String?
-  status      String      @default("new")
+  id               String  @id @default(cuid())
+  name             String
+  company          String?
+  role             String?
+  status           String  @default("new")
 
-  emails      Email[]
+  emails            String
 
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
+  notes            Note[]
 
-  createdAt   DateTime    @default(now())
+  userId           String
+  user             User   @relation(fields: [userId], references: [id])
+
+  createdAt        DateTime @default(now())
+  emailRecords            Email[]
 }
 
 model Campaign {
-  id          String      @id @default(cuid())
-  name        String
+  id               String @id @default(cuid())
+  name             String
 
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
+  userId           String
+  user             User   @relation(fields: [userId], references: [id])
 
-  createdAt   DateTime    @default(now())
+  emailRecords            Email[]
+
+  createdAt DateTime @default(now())
 }
 
 model Email {
-  id               String      @id @default(cuid())
+  id               String @id @default(cuid())
   subject          String
   body             String
 
   rawOutput        String
   humanizedOutput  String
 
-  opened           Boolean     @default(false)
+  opened           Boolean @default(false)
 
-  leadId           String
-  lead             Lead        @relation(fields: [leadId], references: [id])
+  leadId          String
+  lead            Lead   @relation(fields: [leadId], references: [id])
 
-  createdAt        DateTime    @default(now())
+  createdAt       DateTime  @default(now())
+  Campaign        Campaign? @relation(fields: [campaignId], references: [id])
+  campaignId      String?
+}
+
+model Note {
+  id              String   @id @default(cuid())
+  content         String
+  leadId          String
+  lead            Lead     @relation(fields: [leadId], references: [id])
+  createdAt       DateTime @default(now())
 }

@@ -16,7 +16,7 @@ export default function DashboardLayout({
 
         <div className="flex-1">
 
-          <Navbar />
+          {/* <Navbar /> */}
 
           <main className="p-6">
             {children}

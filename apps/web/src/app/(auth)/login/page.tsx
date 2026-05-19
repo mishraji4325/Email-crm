@@ -1,5 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
+
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "../../../store/auth.store";
 import { loginUser } from "../../../services/auth.service";
@@ -7,6 +10,7 @@ import { loginUser } from "../../../services/auth.service";
 
 
 export default function LoginPage() {
+  const router = useRouter();
 
   const {
     register,
@@ -36,6 +40,8 @@ export default function LoginPage() {
       );
 
       alert("Login Successful");
+
+      router.push("/dashboard");
 
     } catch (error) {
 
