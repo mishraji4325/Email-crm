@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import { AuthRequest, authMiddleware } from './middleware/auth.middleware';
 
 dotenv.config();
+console.log(process.env.REDIS_URL);
 
 const app = express();
 
