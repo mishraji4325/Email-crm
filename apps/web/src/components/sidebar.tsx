@@ -1,3 +1,5 @@
+import Link from "next/dist/client/link";
+
 export default function Sidebar() {
   return (
     <div className="w-64 h-screen border-r p-4">
@@ -8,25 +10,37 @@ export default function Sidebar() {
 
       <div className="mt-8 flex flex-col gap-4">
 
-        <a href="/dashboard">
+        <Link href="/dashboard">
           Dashboard
-        </a>
+        </Link>
 
-        <a href="/dashboard/leads">
+        <Link href="/dashboard/leads">
           Leads
-        </a>
+        </Link>
 
-        <a href="/dashboard/pipeline">
+        <Link href="/dashboard/pipeline">
           Pipeline
-        </a>
+        </Link>
 
-        <a href="/dashboard/campaigns">
+        <Link href="/dashboard/campaigns">
           Campaigns
-        </a>
-        
-        <a href="/dashboard/import">
+        </Link>
+
+        <Link href="/dashboard/import">
           Import Leads
-        </a>
+        </Link>
+
+        <Link href = '/dashboard/analytics'>
+          Analytics
+        </Link>
+
+        <Link href = '/dashboard/workspace'>
+          Workspace
+        </Link>
+
+        <Link href= '/dashboard/sequence'>
+          Sequences
+        </Link>
         
 
       </div>

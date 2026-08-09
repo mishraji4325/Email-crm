@@ -8,69 +8,132 @@ datasource db {
 }
 
 model User {
-  id               String @id @default(cuid())
-  name             String
-  email            String @unique
-  password         String
-
-  leads            Lead[]
-  campaigns        Campaign[]
-
-  createdAt        DateTime @default(now())
+  id          String     @id @default(cuid())
+  name        String
+  email       String     @unique
+  password    String
+  createdAt   DateTime   @default(now())
+  role        UserRole   @default(MEMBER)
+  workspaceId String?
+  campaigns   Campaign[]
+  leads       Lead[]
+  sequences   Sequence[]
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
 }
 
 model Lead {
-  id               String  @id @default(cuid())
-  name             String
-  company          String?
-  role             String?
-  status           String  @default("new")
-
-  emails            String
-
-  notes            Note[]
-
-  userId           String
-  user             User   @relation(fields: [userId], references: [id])
-
-  createdAt        DateTime @default(now())
-  emailRecords            Email[]
+  id           String         @id @default(cuid())
+  name         String
+  company      String?
+  role         String?
+  userId       String
+  createdAt    DateTime       @default(now())
+  emails       String
+  status       LeadStatus     @default(NEW)
+  activities   Activity[]
+  campaigns    CampaignLead[]
+  emailRecords Email[]
+  user         User           @relation(fields: [userId], references: [id])
+  notes        Note[]
+  sequences SequenceLead[]
 }
 
 model Campaign {
-  id               String @id @default(cuid())
-  name             String
-
-  userId           String
-  user             User   @relation(fields: [userId], references: [id])
-
-  emailRecords            Email[]
-
-  createdAt DateTime @default(now())
+  id            String         @id @default(cuid())
+  name          String
+  userId        String
+  createdAt     DateTime       @default(now())
+  user          User           @relation(fields: [userId], references: [id])
+  campaignLeads CampaignLead[]
+  emailRecords  Email[]
 }
 
 model Email {
-  id               String @id @default(cuid())
-  subject          String
-  body             String
-
-  rawOutput        String
-  humanizedOutput  String
-
-  opened           Boolean @default(false)
-
+  id              String    @id @default(cuid())
+  subject         String
+  body            String
+  rawOutput       String
+  humanizedOutput String
+  opened          Boolean   @default(false)
   leadId          String
-  lead            Lead   @relation(fields: [leadId], references: [id])
-
   createdAt       DateTime  @default(now())
-  Campaign        Campaign? @relation(fields: [campaignId], references: [id])
   campaignId      String?
+  isDraft         Boolean   @default(true)
+  openedAt        DateTime?
+  variant         String?
+  Campaign        Campaign? @relation(fields: [campaignId], references: [id])
+  lead            Lead      @relation(fields: [leadId], references: [id])
 }
 
 model Note {
-  id              String   @id @default(cuid())
-  content         String
-  leadId          String
-  lead            Lead     @relation(fields: [leadId], references: [id])
-  createdAt       DateTime @default(now())
+  id        String   @id @default(cuid())
+  content   String
+  leadId    String
+  createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id])
+}
+
+model CampaignLead {
+  id         String   @id @default(cuid())
+  campaignId String
+  leadId     String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  lead       Lead     @relation(fields: [leadId], references: [id])
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  type        String
+  description String
+  leadId      String
+  createdAt   DateTime @default(now())
+  lead        Lead     @relation(fields: [leadId], references: [id])
+}
+
+model Workspace {
+  id                   String            @id @default(cuid())
+  name                 String
+  createdAt            DateTime          @default(now())
+  users                User[]
+}
+
+model Sequence {
+  id        String         @id @default(cuid())
+  name      String
+  userId    String
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id])
+  steps     SequenceStep[]
+  leads     SequenceLead[]
+
+}
+
+model SequenceStep {
+  id         String   @id @default(cuid())
+  sequenceId String
+  dayOffset  Int
+  subject    String
+  body       String
+  sequence   Sequence @relation(fields: [sequenceId], references: [id])
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  REPLIED
+  BOOKED
+  CLOSED
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+model SequenceLead{
+  id           String           @id @default(cuid())
+  sequenceId   String
+  leadId       String
+  sequence     Sequence         @relation(fields:[sequenceId],references:[id])
+  lead         Lead             @relation(fields:[leadId], references:[id])
 }

@@ -1,16 +1,16 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
 
 
-export default async function createNote(req: AuthRequest, res: Response) {
+export async function createNote(req: AuthRequest, res: Response) {
     try{
         const {content, leadId} = req.body;
 
         const note = await prisma.note.create({
             data:{
                 content,
-                leadId
+                leadId,
             }
         });
         res.json(note);
@@ -19,3 +19,17 @@ export default async function createNote(req: AuthRequest, res: Response) {
         res.status(500).json({ error: 'Failed to create note' });
     }
 };
+
+export async function deleteNote(req:Request, res:Response){
+    try{
+        await prisma.note.delete({
+            where:{
+                id:req.params.id,
+            },
+        });
+        res.json({message:"Note Deleted"})
+    }catch(err){
+        console.log(err)
+        res.status(500).json({err:"failed to delete node"})
+    }
+}
