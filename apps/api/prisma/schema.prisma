@@ -19,6 +19,7 @@ model User {
   leads       Lead[]
   sequences   Sequence[]
   workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  notifications Notification[]
 }
 
 model Lead {
@@ -136,4 +137,16 @@ model SequenceLead{
   leadId       String
   sequence     Sequence         @relation(fields:[sequenceId],references:[id])
   lead         Lead             @relation(fields:[leadId], references:[id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
 }

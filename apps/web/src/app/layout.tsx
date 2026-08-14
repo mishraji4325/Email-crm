@@ -1,9 +1,13 @@
 import "./globals.css";
-import { Geist } from "next/font/google";
+import { Geist, Playfair_Display } from "next/font/google";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/providers/query-provider";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 
 export default function RootLayout({
@@ -12,7 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html
+      lang="en"
+      className={cn("font-sans antialiased", geist.variable, playfair.variable)}
+    >
       <body>
         <QueryProvider>
           {children}

@@ -1,40 +1,102 @@
 "use client";
 
-interface BulkActionsProps{
-    selectedLeads:string[];
-    onGenerate:()=>void;
-    onSend:()=>void;
-    onCampaign:()=>void;
-    onSequence:()=>void;
+import { Button } from "@/components/ui/button";
+
+interface BulkActionsProps {
+    selectedLeads: string[];
+    onGenerate: () => void;
+    onSend: () => void;
+    onCampaign: () => void;
+    onSequence: () => void;
 }
 
 export default function BulkActions({
-    selectedLeads, onGenerate, onSend, onCampaign, onSequence
-}: BulkActionsProps){
-    if(selectedLeads.length===0){
-        return null;
-    }
+    selectedLeads,
+    onGenerate,
+    onSend,
+    onCampaign,
+    onSequence,
+}: BulkActionsProps) {
+
+    const disabled =
+        selectedLeads.length === 0;
+
     return (
-        <div className="border rounded-lg p-4 mb-6 bg-gray-50">
-            <div className="flex justify-between items-center">
-                <h2 className="font-semibold">
-                    {selectedLeads.length} Lead(s) selected
-                </h2>
-                <div className="flex gap-3">
-                    <button onClick={onGenerate} className="border px-3 py-2 rounded">
-                        Generative Ai
-                    </button>
-                    <button onClick={onSend} className="border px-3 py-2 rounded">
-                        Send
-                    </button>
-                    <button onClick={onCampaign} className="border px-3 py-2 rounded">
-                        Add Campaign
-                    </button>
-                    <button onClick={onSequence} className="border px-3 py-2 rounded">
-                        Add Sequence
-                    </button>
-                </div>
+        <div className="
+            flex
+            flex-wrap
+            items-center
+            gap-3
+            rounded-xl
+            border
+            border-white/10
+            bg-[#0d1526]
+            p-4
+        ">
+
+            <div className="mr-2">
+
+                <p className="
+                    text-xs
+                    uppercase
+                    tracking-[0.15em]
+                    text-gray-600
+                ">
+                    Selected
+                </p>
+
+                <p className="
+                    text-sm
+                    font-semibold
+                    text-white
+                ">
+                    {selectedLeads.length} leads
+                </p>
+
             </div>
+
+
+            <div className="
+                h-8
+                w-px
+                bg-white/10
+            " />
+
+
+            <Button
+                disabled={disabled}
+                onClick={onGenerate}
+            >
+                ✦ Generate
+            </Button>
+
+
+            <Button
+                variant="secondary"
+                disabled={disabled}
+                onClick={onSend}
+            >
+                ✉ Send
+            </Button>
+
+
+            <Button
+                variant="secondary"
+                disabled={disabled}
+                onClick={onCampaign}
+            >
+                ◈ Campaign
+            </Button>
+
+
+            <Button
+                variant="secondary"
+                disabled={disabled}
+                onClick={onSequence}
+            >
+                ≡ Sequence
+            </Button>
+
         </div>
     );
 }

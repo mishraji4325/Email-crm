@@ -14,7 +14,7 @@ router.patch('/:id/book', bookMeeting);
 
 router.get("/:id", authMiddleware, getLeadsById);
 
-router.patch('/:id', authMiddleware , updateLeadStatus);
+router.patch('/:id/status', authMiddleware , updateLeadStatus);
 
 
 

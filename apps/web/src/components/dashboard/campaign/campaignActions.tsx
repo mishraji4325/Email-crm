@@ -1,5 +1,8 @@
 "use client";
 
+import {Button} from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 interface CampaignActionsProps {
     generating: boolean;
     sending: boolean;
@@ -11,48 +14,56 @@ export default function CampaignActions({
     generating,
     sending,
     onGenerate,
-    onSend
+    onSend,
 }: CampaignActionsProps) {
 
     return (
-        <div className="border rounded-xl p-6 mt-6">
+        <Card className="mt-6">
 
-            <h2 className="text-xl font-bold mb-6">
+            <CardHeader>
 
-                Campaign Actions
+                <CardTitle>
+                    Campaign Actions
+                </CardTitle>
 
-            </h2>
+            </CardHeader>
 
-            <div className="flex flex-col md:flex-row gap-4">
 
-                <button
-                    onClick={onGenerate}
-                    disabled={generating}
-                    className="bg-black text-white border rounded-lg px-5 py-3 disabled:opacity-50"
-                >
-                    {
-                        generating
-                            ?
-                            "Generating..."
-                            :
-                            "Generate All Emails"
-                    }
-                </button>
+            <CardContent>
 
-                <button
-                    onClick={onSend}
-                    disabled={sending}
-                    className="bg-black text-white border rounded-lg px-5 py-3 disabled:opacity-50"
-                >
-                    {
-                        sending
-                            ?
-                            "Sending..."
-                            :
-                            "Send All Emails"
-                    }
-                </button>
-            </div>
-        </div>
+                <div className="
+                    flex
+                    flex-col
+                    gap-3
+                    sm:flex-row
+                ">
+
+                    <Button
+                        onClick={onGenerate}
+                        disabled={generating}
+                    >
+                        {generating
+                            ? "Generating..."
+                            : "✦ Generate All Emails"
+                        }
+                    </Button>
+
+
+                    <Button
+                        variant="secondary"
+                        onClick={onSend}
+                        disabled={sending}
+                    >
+                        {sending
+                            ? "Sending..."
+                            : "✉ Send All Emails"
+                        }
+                    </Button>
+
+                </div>
+
+            </CardContent>
+
+        </Card>
     );
 }

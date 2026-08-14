@@ -129,6 +129,12 @@ export async function getAvailableUsers(req: Request, res: Response) {
             where: {
                 workspaceId: null,
             },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            },
+            
             orderBy: {
                 createdAt: "desc",
             },

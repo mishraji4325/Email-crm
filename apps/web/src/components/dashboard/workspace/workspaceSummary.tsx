@@ -1,30 +1,73 @@
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+
 interface Props {
     workspace: any;
 }
 
 export default function WorkspaceSummary({
-    workspace
+    workspace,
 }: Props) {
+
+    const members =
+        workspace.users?.length || 0;
 
     return (
 
-        <div className="border rounded-xl p-6">
-            <h2 className="text-xl font-bold mb-6">
-                Workspace Summary
-            </h2>
+        <Card>
 
-            <div className="grid grid-cols-2 gap-6">
-                <div>
-                    <p className="text-gray-500">
+            <CardHeader>
+
+                <CardTitle>
+                    Workspace Summary
+                </CardTitle>
+
+            </CardHeader>
+
+            <CardContent>
+
+                <div className="
+                    rounded-xl
+                    border
+                    border-white/10
+                    bg-[#111a2b]
+                    p-5
+                ">
+
+                    <p className="
+                        text-[10px]
+                        uppercase
+                        tracking-[0.18em]
+                        text-gray-600
+                    ">
                         Members
                     </p>
 
-                    <h3 className="text-2xl font-bold">
-                        {workspace.users.length}
+                    <h3 className="
+                        mt-2
+                        text-3xl
+                        font-semibold
+                        text-[#f4bb4f]
+                    ">
+                        {members}
                     </h3>
-                </div>
-            </div>
 
-        </div>
+                    <p className="
+                        mt-1
+                        text-xs
+                        text-gray-600
+                    ">
+                        People in this workspace
+                    </p>
+
+                </div>
+
+            </CardContent>
+
+        </Card>
     );
 }

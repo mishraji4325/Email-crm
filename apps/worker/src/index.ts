@@ -1,16 +1,16 @@
     import { Worker } from "bullmq";
     import express from "express";
     import { createServer } from "http";
-    import { connection } from "./lib/redis";
-    import { getIO, initializeSocket } from "./lib/socket";
-    import testRoutes from "./routes/test.route";
-    import generateRoutes from "./routes/generate.route";
-    import { prisma } from "./lib/prisma";
-    import { generateEmail} from "./services/AnthropicAI.service";
-    import { humanizeEmail } from "./services/humanizer.service";
-    import { sendEmail } from "./services/resend.service";
-    import { getTemplateVariant, buildPrompt } from "./services/template.service";
-    import { followupQueue } from "./queues/followup.queue";
+    import { connection } from "./lib/redis.js";
+    import { getIO, initializeSocket } from "./lib/socket.js";
+    import testRoutes from "./routes/test.route.js";
+    import generateRoutes from "./routes/generate.route.js";
+    import { prisma } from "./lib/prisma.js";
+    import { generateEmail} from "./services/AnthropicAI.service.js";
+    import { humanizeEmail } from "./services/humanizer.service.js";
+    import { sendEmail } from "./services/resend.service.js";
+    import { getTemplateVariant, buildPrompt } from "./services/template.service.js";
+    import { followupQueue } from "./queues/followup.queue.js";
 
     const app = express();
 
@@ -47,6 +47,10 @@
               const prompt = buildPrompt(lead, variant);
       
               const rawEmail = await generateEmail(lead, prompt);
+              if (!rawEmail) {
+                console.log("Email generation returned empty result");
+                return;
+              }
       
               // console.log("RAW EMAIL:");
               // console.log(rawEmail);

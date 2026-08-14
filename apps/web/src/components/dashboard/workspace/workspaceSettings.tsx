@@ -1,139 +1,260 @@
 "use client";
 
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import {
-  useMutation,
-  useQueryClient,
+    useMutation,
+    useQueryClient,
 } from "@tanstack/react-query";
 
 import {
-  updateWorkspace,
-  deleteWorkspace,
+    updateWorkspace,
+    deleteWorkspace,
 } from "@/services/workspace.service";
 
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+
+import {Button} from "@/components/ui/button";
+
 interface Props {
-  workspace: any;
+    workspace: any;
 }
 
 export default function WorkspaceSettings({
-  workspace,
+    workspace,
 }: Props) {
-  const [name, setName] = useState(workspace.name);
 
-  const router = useRouter();
+    const [
+        name,
+        setName,
+    ] = useState(
+        workspace.name
+    );
 
-  const queryClient = useQueryClient();
 
-  const updateMutation = useMutation({
-    mutationFn: () =>
-      updateWorkspace(
-        workspace.id,
-        name
-      ),
+    const router =
+        useRouter();
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["workspace", workspace.id],
-      });
 
-      queryClient.invalidateQueries({
-        queryKey: ["workspaces"],
-      });
+    const queryClient =
+        useQueryClient();
 
-      alert("Workspace updated.");
-    },
-  });
 
-  const deleteMutation = useMutation({
-    mutationFn: () =>
-      deleteWorkspace(workspace.id),
+    /* ========================================= */
+    /* UPDATE */
+    /* ========================================= */
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["workspaces"],
-      });
+    const updateMutation =
+        useMutation({
 
-      router.push("/dashboard/workspaces");
-    },
-  });
+            mutationFn: () =>
+                updateWorkspace(
+                    workspace.id,
+                    name
+                ),
 
-  return (
-    <div className="border rounded-xl p-6 mt-6">
+            onSuccess: () => {
 
-      <h2 className="text-xl font-bold mb-6">
-        Workspace Settings
-      </h2>
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        "workspace",
+                        workspace.id,
+                    ],
+                });
 
-      <div className="space-y-6">
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        "workspaces",
+                    ],
+                });
 
-        <div>
-
-          <label className="block mb-2 font-medium">
-            Workspace Name
-          </label>
-
-          <input
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-            className="border rounded-lg p-3 w-full"
-          />
-
-          <button
-            className="bg-black text-white rounded-lg px-5 py-2 mt-4"
-            disabled={
-              updateMutation.isPending
-            }
-            onClick={() =>
-              updateMutation.mutate()
-            }
-          >
-            {updateMutation.isPending
-              ? "Saving..."
-              : "Save Changes"}
-          </button>
-
-        </div>
-
-        <div className="border-t pt-6">
-
-          <h3 className="text-lg font-bold text-red-600">
-            Danger Zone
-          </h3>
-
-          <p className="text-gray-500 mt-2">
-            Deleting this workspace cannot be undone.
-          </p>
-
-          <button
-            className="mt-4 border border-red-500 text-red-600 rounded-lg px-5 py-2 hover:bg-red-50"
-            disabled={
-              deleteMutation.isPending
-            }
-            onClick={() => {
-
-              const confirmed =
-                window.confirm(
-                  "Delete this workspace permanently?"
+                alert(
+                    "Workspace updated."
                 );
 
-              if (!confirmed) return;
+            },
 
-              deleteMutation.mutate();
+        });
 
-            }}
-          >
-            {deleteMutation.isPending
-              ? "Deleting..."
-              : "Delete Workspace"}
-          </button>
 
-        </div>
+    /* ========================================= */
+    /* DELETE */
+    /* ========================================= */
 
-      </div>
+    const deleteMutation =
+        useMutation({
 
-    </div>
-  );
+            mutationFn: () =>
+                deleteWorkspace(
+                    workspace.id
+                ),
+
+            onSuccess: () => {
+
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        "workspaces",
+                    ],
+                });
+
+                router.push(
+                    "/dashboard/workspaces"
+                );
+
+            },
+
+        });
+
+
+    return (
+
+        <Card className="mt-6">
+
+            <CardHeader>
+
+                <CardTitle>
+                    Workspace Settings
+                </CardTitle>
+
+            </CardHeader>
+
+
+            <CardContent>
+
+                <div className="space-y-8">
+
+
+                    {/* ================================= */}
+                    {/* NAME */}
+                    {/* ================================= */}
+
+                    <div>
+
+                        <label className="
+                            mb-2
+                            block
+                            text-[10px]
+                            font-medium
+                            uppercase
+                            tracking-[0.16em]
+                            text-gray-500
+                        ">
+                            Workspace Name
+                        </label>
+
+
+                        <input
+                            value={name}
+                            onChange={(e) =>
+                                setName(
+                                    e.target.value
+                                )
+                            }
+                            className="
+                                h-11
+                                w-full
+                                rounded-xl
+                                border
+                                border-white/10
+                                bg-[#111a2b]
+                                px-4
+                                text-sm
+                                text-white
+                                outline-none
+                                placeholder:text-gray-600
+                                focus:border-[#f4bb4f]/60
+                            "
+                        />
+
+
+                        <Button
+                            className="mt-3"
+                            disabled={
+                                updateMutation.isPending ||
+                                !name.trim()
+                            }
+                            onClick={() =>
+                                updateMutation.mutate()
+                            }
+                        >
+                            {updateMutation.isPending
+                                ? "Saving..."
+                                : "Save Changes"
+                            }
+                        </Button>
+
+                    </div>
+
+
+                    {/* ================================= */}
+                    {/* DANGER ZONE */}
+                    {/* ================================= */}
+
+                    <div className="
+                        border-t
+                        border-white/10
+                        pt-7
+                    ">
+
+                        <h3 className="
+                            text-lg
+                            font-semibold
+                            text-red-400
+                        ">
+                            Danger Zone
+                        </h3>
+
+
+                        <p className="
+                            mt-1
+                            text-sm
+                            text-gray-600
+                        ">
+                            Deleting this workspace
+                            cannot be undone.
+                        </p>
+
+
+                        <Button
+                            variant="danger"
+                            className="mt-4"
+                            disabled={
+                                deleteMutation.isPending
+                            }
+                            onClick={() => {
+
+                                const confirmed =
+                                    window.confirm(
+                                        "Delete this workspace permanently?"
+                                    );
+
+                                if (!confirmed) {
+                                    return;
+                                }
+
+                                deleteMutation.mutate();
+
+                            }}
+                        >
+                            {deleteMutation.isPending
+                                ? "Deleting..."
+                                : "Delete Workspace"
+                            }
+                        </Button>
+
+                    </div>
+
+                </div>
+
+            </CardContent>
+
+        </Card>
+    );
 }

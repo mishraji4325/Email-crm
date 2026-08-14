@@ -15,8 +15,11 @@ export async function getLead(id:string){
   return response.data;
 };
 
-export async function updateLeadStatus(id:string, status:string){
-  const response = await api.patch(`/leads/${id}`, {status});
+export async function updateLeadStatus(leadId:string, status:string){
+  const response = await api.patch(`/leads/${leadId}/status`, 
+    {
+      status
+    });
   return response.data;
 };
 

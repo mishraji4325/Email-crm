@@ -1,5 +1,7 @@
+"use client";
+
 import {
-    Pie
+    Pie,
 } from "react-chartjs-2";
 
 interface Props {
@@ -7,8 +9,9 @@ interface Props {
 }
 
 export default function LeadStatusChart({
-    data
+    data,
 }: Props) {
+
     const chartData = {
 
         labels: data.map(
@@ -18,26 +21,84 @@ export default function LeadStatusChart({
         datasets: [
             {
                 data: data.map(
-                    (item) => item._count.status
+                    (item) =>
+                        item._count.status
                 ),
+
+                backgroundColor: [
+                    "#f4bb4f",
+                    "#60a5fa",
+                    "#a78bfa",
+                    "#34d399",
+                    "#f87171",
+                ],
+
+                borderColor:
+                    "#0d1526",
+
+                borderWidth: 3,
             },
         ],
+
     };
+
+
+    const options = {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                position: "bottom" as const,
+
+                labels: {
+
+                    color: "#9ca3af",
+
+                    padding: 18,
+
+                    usePointStyle: true,
+
+                },
+
+            },
+
+        },
+
+    };
+
 
     return (
 
-        <div className="border rounded-xl p-6">
+        <div className="h-[320px]">
 
-            <h2 className="text-xl font-bold mb-4">
+            {data.length === 0 ? (
 
-                Lead Status
+                <div className="
+                    flex
+                    h-full
+                    items-center
+                    justify-center
+                    text-sm
+                    text-gray-600
+                ">
+                    No lead status data available.
+                </div>
 
-            </h2>
+            ) : (
 
-            <Pie data={chartData}/>
+                <Pie
+                    data={chartData}
+                    options={options}
+                />
+
+            )}
 
         </div>
 
     );
-
 }

@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
+import { createNotification } from "./notification.controller";
 
 export async function createLead(req: AuthRequest, res: Response) {
     try {
@@ -23,6 +24,13 @@ export async function createLead(req: AuthRequest, res: Response) {
                 role,
                 userId: req.userId,
             },
+        });
+
+        await createNotification({
+            userId: req.userId,
+            title: "New Lead Added",
+            message: `${lead.name} was added to your leads.`,
+            type: "LEAD_ADDED",
         });
 
         res.status(201).json(lead);
@@ -123,19 +131,19 @@ export async function getLeadsById(req: AuthRequest, res: Response) {
                         createdAt: "desc",
                     },
                 },
-                emailRecords:{
-                    orderBy:{
-                        createdAt:"desc",
+                emailRecords: {
+                    orderBy: {
+                        createdAt: "desc",
                     },
                 },
-                activities:{
-                    orderBy:{
-                        createdAt:"desc",
+                activities: {
+                    orderBy: {
+                        createdAt: "desc",
                     },
                 },
-                campaigns:{
-                    include:{
-                        campaign:true,
+                campaigns: {
+                    include: {
+                        campaign: true,
                     },
                 },
             }
@@ -152,52 +160,146 @@ export async function getLeadsById(req: AuthRequest, res: Response) {
     }
 };
 
-export async function updateLeadStatus(req: AuthRequest, res: Response) {
-};
-
-export async function getLeadActivities(req: AuthRequest, res: Response) {
+export async function updateLeadStatus( req: AuthRequest, res: Response ) {
     try {
-        const activities = await prisma.activity.findMany({
-            where: {
-                leadId: req.params.id
-            },
-            orderBy: {
-                createdAt: "desc"
-            }
-        });
-        res.json(activities);
-    } catch (err) {
-        console.log(err);
+        if (!req.userId) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
 
-        res.status(500).json({
-            message: "failed to fetch activities"
+        const { status } = req.body;
+
+        const lead = await prisma.lead.findFirst({
+            where: {
+                id: req.params.id,
+                userId: req.userId,
+            },
+        });
+
+        if (!lead) {
+            return res.status(404).json({
+                message: "Lead not found",
+            });
+        }
+
+        const updatedLead = await prisma.lead.update({
+            where: {
+                id: lead.id,
+            },
+            data: {
+                status,
+            },
+        });
+
+        await createNotification({
+            userId: req.userId,
+            title: "Lead Status Updated",
+            message: `${updatedLead.name} moved to ${status}.`,
+            type: "LEAD_STATUS_CHANGED",
+        });
+
+        return res.json(updatedLead);
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: "Failed to update lead status",
         });
     }
 }
 
-export async function bookMeeting(req: AuthRequest, res: Response) {
+export async function getLeadActivities( req: AuthRequest, res: Response ) {
     try {
-        const lead = await prisma.lead.update({
+        if (!req.userId) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
+
+        const lead = await prisma.lead.findFirst({
             where: {
-                id: req.params.id
+                id: req.params.id,
+                userId: req.userId,
             },
-            data: {
-                status: "BOOKED"
-            }
         });
+
+        if (!lead) {
+            return res.status(404).json({
+                message: "Lead not found",
+            });
+        }
+
+        const activities =
+            await prisma.activity.findMany({
+                where: {
+                    leadId: lead.id,
+                },
+
+                orderBy: {
+                    createdAt: "desc",
+                },
+            });
+
+        return res.json(activities);
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Failed to fetch activities",
+        });
+    }
+}
+
+export async function bookMeeting( req: AuthRequest, res: Response ) {
+    try {
+        if (!req.userId) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
+
+        const lead = await prisma.lead.findFirst({
+            where: {
+                id: req.params.id,
+                userId: req.userId,
+            },
+        });
+
+        if (!lead) {
+            return res.status(404).json({
+                message: "Lead not found",
+            });
+        }
+
+        const updatedLead =
+            await prisma.lead.update({
+                where: {
+                    id: lead.id,
+                },
+
+                data: {
+                    status: "BOOKED",
+                },
+            });
 
         await prisma.activity.create({
             data: {
                 type: "MEETING_BOOKED",
                 description: "Meeting booked with lead",
-                leadId: req.params.id,
-            }
+                leadId: lead.id,
+            },
         });
-        res.json(lead);
+
+        return res.json(updatedLead);
+
     } catch (err) {
-        console.log(err)
-        res.status(500).json({
-            message: "Server Error"
-        })
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Server Error",
+        });
     }
 }

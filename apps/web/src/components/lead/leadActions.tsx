@@ -1,34 +1,51 @@
 "use client";
 
+import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
-interface LeadActionsProps{
+interface LeadActionsProps {
     lead: any;
-    onGenerate?: (id:string)=>void;
-    onSend?: (id:string)=>void;
+    onGenerate?: (id: string) => void;
+    onSend?: (id: string) => void;
 }
 
 export default function LeadActions({
-    lead, onGenerate, onSend
-}: LeadActionsProps){
+    lead,
+    onGenerate,
+    onSend,
+}: LeadActionsProps) {
+
     return (
-        <div className="felx gap-2 mt-4">
-            <Link href={`/dashboard/leads/${lead.id}`} 
-                className="border rounded px-3 py-2">
-                   View     
+        <div className="
+            flex
+            flex-wrap
+            gap-2
+        ">
+
+            <Link href={`/dashboard/leads/${lead.id}`}>
+                <Button variant="secondary">
+                 👁️ View
+                </Button>
             </Link>
 
-            <button className="border rounded px-3 py-2"
-                    onClick={()=>onGenerate?.(lead.id)}
+            <Button
+                variant="secondary"
+                onClick={() =>
+                    onGenerate?.(lead.id)
+                }
             >
-                Generative Ai
-            </button>
+                ✦ Generate Email
+            </Button>
 
-            <button className="border rounded px-3 py-2"
-                    onClick={()=>onSend?.(lead.id)}
+            <Button
+                variant="primary"
+                onClick={() =>
+                    onSend?.(lead.id)
+                }
             >
-                Send
-            </button>
+                ✉ Send Email
+            </Button>
+
         </div>
-    )
+    );
 }

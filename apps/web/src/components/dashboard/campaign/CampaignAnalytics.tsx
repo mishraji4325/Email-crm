@@ -1,135 +1,265 @@
+"use client";
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+
+import Badge from "@/components/ui/badge";
+
 interface CampaignAnalyticsProps {
-  campaign: any;
+    campaign: any;
 }
 
 export default function CampaignAnalytics({
-  campaign,
+    campaign,
 }: CampaignAnalyticsProps) {
 
-  const totalEmails =
-    campaign.emailRecords?.length || 0;
+    const totalEmails =
+        campaign.emailRecords?.length || 0;
 
-  const openedEmails =
-    campaign.emailRecords?.filter(
-      (email: any) => email.opened
-    ).length || 0;
+    const openedEmails =
+        campaign.emailRecords?.filter(
+            (email: any) => email.opened
+        ).length || 0;
 
-  const totalLeads =
-    campaign.campaignLeads?.length || 0;
+    const totalLeads =
+        campaign.campaignLeads?.length || 0;
 
-  const openRate =
-    totalEmails === 0
-      ? 0
-      : Math.round(
-          (openedEmails / totalEmails) * 100
-        );
+    const openRate =
+        totalEmails === 0
+            ? 0
+            : Math.round(
+                (openedEmails / totalEmails) * 100
+            );
 
-  return (
-    <div className="border rounded-xl p-6 mt-6">
 
-      <h2 className="text-xl font-bold mb-6">
+    return (
+        <Card className="mt-6">
 
-        Campaign Performance
+            <CardHeader>
 
-      </h2>
+                <CardTitle>
+                    Campaign Performance
+                </CardTitle>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            </CardHeader>
 
-        <div className="border rounded-lg p-4">
 
-          <p className="text-gray-500">
+            <CardContent>
 
-            Leads
+                {/* ================= STATS ================= */}
 
-          </p>
+                <div className="
+                    grid
+                    grid-cols-2
+                    gap-3
+                    md:grid-cols-4
+                ">
 
-          <h3 className="text-2xl font-bold">
+                    {/* Leads */}
 
-            {totalLeads}
+                    <div className="
+                        rounded-xl
+                        border
+                        border-white/10
+                        bg-[#111a2b]
+                        p-4
+                    ">
 
-          </h3>
+                        <p className="
+                            text-xs
+                            text-gray-500
+                        ">
+                            Leads
+                        </p>
 
-        </div>
+                        <p className="
+                            mt-2
+                            text-2xl
+                            font-semibold
+                            text-white
+                        ">
+                            {totalLeads}
+                        </p>
 
-        <div className="border rounded-lg p-4">
+                    </div>
 
-          <p className="text-gray-500">
 
-            Emails
+                    {/* Emails */}
 
-          </p>
+                    <div className="
+                        rounded-xl
+                        border
+                        border-white/10
+                        bg-[#111a2b]
+                        p-4
+                    ">
 
-          <h3 className="text-2xl font-bold">
+                        <p className="
+                            text-xs
+                            text-gray-500
+                        ">
+                            Emails
+                        </p>
 
-            {totalEmails}
+                        <p className="
+                            mt-2
+                            text-2xl
+                            font-semibold
+                            text-white
+                        ">
+                            {totalEmails}
+                        </p>
 
-          </h3>
+                    </div>
 
-        </div>
 
-        <div className="border rounded-lg p-4">
+                    {/* Opened */}
 
-          <p className="text-gray-500">
+                    <div className="
+                        rounded-xl
+                        border
+                        border-white/10
+                        bg-[#111a2b]
+                        p-4
+                    ">
 
-            Opened
+                        <p className="
+                            text-xs
+                            text-gray-500
+                        ">
+                            Opened
+                        </p>
 
-          </p>
+                        <p className="
+                            mt-2
+                            text-2xl
+                            font-semibold
+                            text-emerald-400
+                        ">
+                            {openedEmails}
+                        </p>
 
-          <h3 className="text-2xl font-bold">
+                    </div>
 
-            {openedEmails}
 
-          </h3>
+                    {/* Open Rate */}
 
-        </div>
+                    <div className="
+                        rounded-xl
+                        border
+                        border-[#f4bb4f]/10
+                        bg-[#f4bb4f]/5
+                        p-4
+                    ">
 
-        <div className="border rounded-lg p-4">
+                        <p className="
+                            text-xs
+                            text-gray-500
+                        ">
+                            Open Rate
+                        </p>
 
-          <p className="text-gray-500">
+                        <p className="
+                            mt-2
+                            text-2xl
+                            font-semibold
+                            text-[#f4bb4f]
+                        ">
+                            {openRate}%
+                        </p>
 
-            Open Rate
+                    </div>
 
-          </p>
+                </div>
 
-          <h3 className="text-2xl font-bold">
 
-            {openRate}%
+                {/* ================= PROGRESS ================= */}
 
-          </h3>
+                <div className="mt-8">
 
-        </div>
+                    <div className="
+                        mb-2
+                        flex
+                        items-center
+                        justify-between
+                    ">
 
-      </div>
+                        <div className="
+                            flex
+                            items-center
+                            gap-2
+                        ">
 
-      <div className="mt-8">
+                            <span className="
+                                text-sm
+                                text-gray-300
+                            ">
+                                Email Open Rate
+                            </span>
 
-        <div className="flex justify-between mb-2">
+                            <Badge
+                                variant={
+                                    openRate >= 50
+                                        ? "success"
+                                        : "warning"
+                                }
+                            >
+                                {openRate}%
+                            </Badge>
 
-          <span>Open Rate</span>
+                        </div>
 
-          <span>{openRate}%</span>
+                        <span className="
+                            text-xs
+                            text-gray-500
+                        ">
+                            {openedEmails} / {totalEmails}
+                        </span>
 
-        </div>
+                    </div>
 
-        <div className="w-full bg-gray-200 rounded-full h-3">
 
-          <div
-            className="bg-green-500 h-3 rounded-full"
-            style={{
-              width: `${openRate}%`,
-            }}
-          />
+                    <div className="
+                        h-3
+                        overflow-hidden
+                        rounded-full
+                        bg-[#111a2b]
+                    ">
 
-        </div>
+                        <div
+                            className="
+                                h-full
+                                rounded-full
+                                bg-gradient-to-r
+                                from-[#f4bb4f]
+                                to-[#e99b28]
+                                transition-all
+                            "
+                            style={{
+                                width: `${openRate}%`,
+                            }}
+                        />
 
-        <p className="text-sm text-gray-500 mt-2">
+                    </div>
 
-          {openedEmails} of {totalEmails} emails opened
 
-        </p>
+                    <p className="
+                        mt-2
+                        text-xs
+                        text-gray-500
+                    ">
+                        {openedEmails} of{" "}
+                        {totalEmails} emails opened
+                    </p>
 
-      </div>
+                </div>
 
-    </div>
-  );
+            </CardContent>
+
+        </Card>
+    );
 }

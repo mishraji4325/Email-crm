@@ -1,9 +1,14 @@
 import {Router} from 'express';
-import {loginUser, registerUser} from '../controllers/auth.controller';
+import {deleteAccount, loginUser, registerUser, updateProfile} from '../controllers/auth.controller';
 
 const router = Router();
 
 router.post('/register', registerUser);
+
 router.post('/login', loginUser);
+
+router.patch("/profile", updateProfile);
+
+router.delete("/account", deleteAccount);
 
 export default router;

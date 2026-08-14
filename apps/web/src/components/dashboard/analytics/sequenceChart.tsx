@@ -1,5 +1,7 @@
+"use client";
+
 import {
-    Line
+    Line,
 } from "react-chartjs-2";
 
 interface Props {
@@ -7,12 +9,14 @@ interface Props {
 }
 
 export default function SequenceChart({
-    sequences
+    sequences,
 }: Props) {
+
     const chartData = {
 
         labels: sequences.map(
-            (s) => s.name
+            (sequence) =>
+                sequence.name
         ),
 
         datasets: [
@@ -20,26 +24,116 @@ export default function SequenceChart({
                 label: "Steps",
 
                 data: sequences.map(
-                    (s) => s.steps.length
+                    (sequence) =>
+                        sequence.steps?.length || 0
                 ),
+
+                borderColor:
+                    "#f4bb4f",
+
+                backgroundColor:
+                    "rgba(244, 187, 79, 0.12)",
+
+                pointBackgroundColor:
+                    "#f4bb4f",
+
+                pointBorderColor:
+                    "#0d1526",
+
+                pointBorderWidth: 2,
+
+                pointRadius: 5,
+
+                tension: 0.35,
+
+                fill: true,
             },
         ],
+
     };
+
+
+    const options = {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                labels: {
+                    color: "#9ca3af",
+                },
+
+            },
+
+        },
+
+        scales: {
+
+            x: {
+
+                ticks: {
+                    color: "#6b7280",
+                },
+
+                grid: {
+                    color:
+                        "rgba(255,255,255,0.05)",
+                },
+
+            },
+
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+                    color: "#6b7280",
+                    precision: 0,
+                },
+
+                grid: {
+                    color:
+                        "rgba(255,255,255,0.05)",
+                },
+
+            },
+
+        },
+
+    };
+
 
     return (
 
-        <div className="border rounded-xl p-6">
+        <div className="h-[320px]">
 
-            <h2 className="text-xl font-bold mb-4">
+            {sequences.length === 0 ? (
 
-                Sequence Growth
+                <div className="
+                    flex
+                    h-full
+                    items-center
+                    justify-center
+                    text-sm
+                    text-gray-600
+                ">
+                    No sequence data available.
+                </div>
 
-            </h2>
+            ) : (
 
-            <Line data={chartData}/>
+                <Line
+                    data={chartData}
+                    options={options}
+                />
+
+            )}
 
         </div>
 
     );
-
 }

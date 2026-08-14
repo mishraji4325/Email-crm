@@ -1,114 +1,283 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Field {
-  name: string;
-  label: string;
-  type?: "text" | "number" | "textarea";
-  placeholder?: string;
+    name: string;
+    label: string;
+    type?: string;
+    placeholder?: string;
 }
 
 interface CreateEntityModalProps {
-  open: boolean;
-  title: string;
-  placeholder: string;
-  buttonText: string;
-  fields: Field[];
-  onClose: () => void;
-  onSubmit: (value: Record<string, any>) => void;
-  initialValues?: Record<string, any>;
+    open: boolean;
+    title: string;
+    buttonText: string;
+    fields?: Field[];
+    onClose: () => void;
+    onSubmit: (value: any) => void;
 }
 
 export default function CreateEntityModal({
-  open,
-  title,
-  placeholder,
-  buttonText,
-  onClose,
-  onSubmit,
-  fields,
-  initialValues,
+    open,
+    title,
+    buttonText,
+    fields = [],
+    onClose,
+    onSubmit,
 }: CreateEntityModalProps) {
 
-  const [values, setValues] = useState<Record<string, any>>({});
+    const [values, setValues] =
+        useState<Record<string, string>>({});
 
-  useEffect(() => {
-    if (open) {
-      setValues(initialValues || {});
-    } else {
-      setValues({});
+
+    if (!open) {
+        return null;
     }
-  }, [open, initialValues]);
 
-  if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
-      <div className="bg-white rounded-xl p-6 w-[450px]">
-        <h2 className="text-2xl font-bold mb-6">
-          {title}
-        </h2>
+    const handleChange = (
+        name: string,
+        value: string
+    ) => {
 
-        <div className="space-y-4">
-          {fields.map((field) => (
-            <div key={field.name}>
-              <label className="block mb-2 font-medium">
-                {field.label}
-              </label>
-              {field.type === "textarea" ? (
-                <textarea
-                  className="border rounded-lg p-3 w-full"
-                  rows={6}
-                  placeholder={field.placeholder}
-                  value={values[field.name] ?? ""}
-                  onChange={(e) =>
-                    setValues((prev) => ({
-                      ...prev,
-                      [field.name]: e.target.value,
-                    }))
-                  }
-                />
-              ) : (
-                <input
-                  className="border rounded-lg p-3 w-full"
-                  type={field.type ?? "text"}
-                  placeholder={field.placeholder}
-                  value={values[field.name] ?? ""}
-                  onChange={(e) =>
-                    setValues((prev) => ({
-                      ...prev,
-                      [field.name]: e.target.value,
-                    }))
-                  }
-                />
-              )}
+        setValues((current) => ({
+            ...current,
+            [name]: value,
+        }));
+
+    };
+
+
+    const handleSubmit = (
+      e: React.FormEvent
+  ) => {
+  
+      e.preventDefault();
+  
+      if (fields.length === 1) {
+  
+          const fieldName = fields[0].name;
+  
+          const value =
+              values[fieldName] || "";
+  
+          onSubmit(value);
+  
+          return;
+      }
+  
+      onSubmit(values);
+  };
+
+
+    return (
+
+        <div className="
+            fixed
+            inset-0
+            z-50
+            flex
+            items-center
+            justify-center
+            bg-black/70
+            backdrop-blur-sm
+            p-4
+        ">
+
+            <div className="
+                w-full
+                max-w-md
+                overflow-hidden
+                rounded-2xl
+                border
+                border-white/10
+                bg-[#0d1526]
+                shadow-2xl
+            ">
+
+                {/* Header */}
+
+                <div className="
+                    border-b
+                    border-white/10
+                    px-6
+                    py-5
+                ">
+
+                    <div className="
+                        flex
+                        items-center
+                        justify-between
+                    ">
+
+                        <div>
+
+                            <h2 className="
+                                text-lg
+                                font-semibold
+                                text-white
+                            ">
+                                {title}
+                            </h2>
+
+                            <p className="
+                                mt-1
+                                text-xs
+                                text-gray-500
+                            ">
+                                Create a new item
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="
+                                flex
+                                h-8
+                                w-8
+                                items-center
+                                justify-center
+                                rounded-lg
+                                text-gray-500
+                                hover:bg-white/5
+                                hover:text-white
+                            "
+                        >
+                            ✕
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                {/* Form */}
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="p-6"
+                >
+
+                    <div className="space-y-5">
+
+                        {fields.map((field) => (
+
+                            <div key={field.name}>
+
+                                <label className="
+                                    mb-2
+                                    block
+                                    text-sm
+                                    font-medium
+                                    text-gray-300
+                                ">
+                                    {field.label}
+                                </label>
+
+
+                                <input
+                                    type={
+                                        field.type ||
+                                        "text"
+                                    }
+                                    value={
+                                        values[
+                                            field.name
+                                        ] || ""
+                                    }
+                                    onChange={(e) =>
+                                        handleChange(
+                                            field.name,
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder={
+                                        field.placeholder
+                                    }
+                                    className="
+                                        h-11
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-[#111a2b]
+                                        px-4
+                                        text-sm
+                                        text-white
+                                        outline-none
+                                        placeholder:text-gray-600
+                                        focus:border-[#f4bb4f]/50
+                                        focus:ring-2
+                                        focus:ring-[#f4bb4f]/10
+                                    "
+                                />
+
+                            </div>
+
+                        ))}
+
+                    </div>
+
+
+                    {/* Footer */}
+
+                    <div className="
+                        mt-7
+                        flex
+                        justify-end
+                        gap-3
+                        border-t
+                        border-white/10
+                        pt-5
+                    ">
+
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="
+                                rounded-xl
+                                border
+                                border-white/10
+                                px-4
+                                py-2.5
+                                text-sm
+                                font-medium
+                                text-gray-400
+                                hover:bg-white/5
+                                hover:text-white
+                            "
+                        >
+                            Cancel
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            className="
+                                rounded-xl
+                                bg-[#f4bb4f]
+                                px-5
+                                py-2.5
+                                text-sm
+                                font-semibold
+                                text-black
+                                hover:bg-[#f4bb4f]/90
+                            "
+                        >
+                            {buttonText}
+                        </button>
+
+                    </div>
+
+                </form>
+
             </div>
-          ))}
 
         </div>
 
-        <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="border rounded-lg px-4 py-2"
-          >
-            Cancel
-          </button>
-
-          <button
-            className="bg-black text-white rounded-lg px-4 py-2"
-            onClick={() => {
-              // if (!values.trim()) return;
-              onSubmit(values);
-              setValues({});
-              onClose();
-            }}
-          >
-            {buttonText}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

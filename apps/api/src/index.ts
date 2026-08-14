@@ -15,6 +15,7 @@ import webhookRoutes from './routes/webhook.route';
 import sequenceRoutes from './routes/sequence.route';
 import dasboardRoutes from './routes/dashboard.route';
 import workspaceRoutes from './routes/workspace.route';
+import notificationRoutes from './routes/notification.route';
 import dotenv from 'dotenv';
 import { AuthRequest, authMiddleware } from './middleware/auth.middleware';
 import { initializeSocket } from './lib/socket';
@@ -60,6 +61,8 @@ app.use('/sequence', sequenceRoutes);
 app.use('/dashboard', dasboardRoutes);
 
 app.use('/workspace', workspaceRoutes);
+
+app.use('/notifications', notificationRoutes);
 
 
 

@@ -19,6 +19,6 @@
     "next-env.d.ts",
     "next.config.js",
     ".next/types/**/*.ts"
-, "src/components/dashboard/sequence/sequenceCard.tsx"  ],
+, "src/components/dashboard/sequence/sequenceCard.tsx", "src/components/dashboard/campaign/createCampaignModel"  ],
   "exclude": ["node_modules"]
 }

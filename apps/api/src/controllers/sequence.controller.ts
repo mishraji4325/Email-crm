@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { createNotification } from "./notification.controller";
 
 
 export async function createSequence(req: AuthRequest, res: Response) {
@@ -22,6 +23,12 @@ export async function createSequence(req: AuthRequest, res: Response) {
                     userId: req.userId,
                 },
             });
+            await createNotification({
+                userId: req.userId,
+                title: "Sequence Created",
+                message: `${sequence.name} was created successfully.`,
+                type: "SEQUENCE_CREATED",
+            });
         res.status(201).json(sequence);
     } catch (err) {
         console.log(err);
@@ -31,34 +38,47 @@ export async function createSequence(req: AuthRequest, res: Response) {
     }
 }
 
-export async function getSequence(req: Request, res: Response) {
+export async function getSequence(req: AuthRequest, res: Response ) {
     try {
+
+        if (!req.userId) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
+
         const sequence =
-            await prisma.sequence.findUnique({
+            await prisma.sequence.findFirst({
                 where: {
-                    id: req.params.id
+                    id: req.params.id,
+                    userId: req.userId,
                 },
+
                 include: {
                     steps: true,
-                    leads:{
-                        include:{
-                            lead:true,
-                        }
-                    }
-                }
+
+                    leads: {
+                        include: {
+                            lead: true,
+                        },
+                    },
+                },
             });
 
         if (!sequence) {
             return res.status(404).json({
-                message: "Sequence not found"
+                message: "Sequence not found",
             });
         }
-        res.json(sequence);
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Server Error"
+
+        return res.json(sequence);
+
+    } catch (err) {
+
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Server Error",
         });
     }
 }
@@ -88,6 +108,18 @@ export async function getSequences(req: AuthRequest, res: Response) {
 
 export async function createStep(req: Request, res: Response) {
     try {
+        const sequence = await prisma.sequence.findFirst({
+            where: {
+                id: req.params.id,
+                userId: req.userId,
+            },
+        });
+        
+        if (!sequence) {
+            return res.status(404).json({
+                message: "Sequence not found",
+            });
+        }
         const { dayOffset, subject, body } = req.body;
         const step = await prisma.sequenceStep.create({
             data: {

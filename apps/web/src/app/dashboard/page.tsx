@@ -2,130 +2,269 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getDashboard } from "@/services/dashboard.service";
+
 import {
-  Card,
-  CardContent,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
 } from "@/components/ui/card";
+
+import {Button} from "@/components/ui/button";
+import PageHeader from "@/components/ui/page-header";
+import LoadingState from "@/components/ui/loading-state";
+import EmptyState from "@/components/ui/empty-state";
+
 import StatsCard from "@/components/dashboard/statsCard";
 import RecentCampaign from "@/components/dashboard/recentCampaign";
 import RecentActivity from "@/components/dashboard/recentActivity";
 import PipelineCard from "@/components/dashboard/pipelineCard";
 
-
 export default function DashboardPage() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['dashboard'],
-    queryFn: getDashboard
-  });
 
-  if (isLoading) {
-    return <div>Loading Dashboard...</div>
-  }
+    const {
+        data,
+        isLoading,
+        error,
+    } = useQuery({
+        queryKey: ["dashboard"],
+        queryFn: getDashboard,
+    });
 
-  if (error) {
-    return <div>Failed to load dashboard.</div>
-  }
 
-  return (
+    /* ================= LOADING ================= */
 
-    <div className="space-y-8">
+    if (isLoading) {
+        return (
+            <LoadingState
+                text="Loading your dashboard..."
+            />
+        );
+    }
 
-      <div>
 
-        <h1 className="text-3xl font-bold">
+    /* ================= ERROR ================= */
 
-          Dashboard
+    if (error || !data) {
+        return (
+            <EmptyState
+                title="Unable to load dashboard"
+                description="Something went wrong while fetching your CRM data. Please try again."
+                action={
+                    <Button
+                        onClick={() =>
+                            window.location.reload()
+                        }
+                    >
+                        Try Again
+                    </Button>
+                }
+            />
+        );
+    }
 
-        </h1>
 
-        <p className="text-gray-500">
+    return (
+        <div className="space-y-8">
 
-          Welcome back 👋
+            {/* ================================================= */}
+            {/* PAGE HEADER */}
+            {/* ================================================= */}
 
-        </p>
+            <PageHeader
+                title="Dashboard"
+                description="Here's what's happening with your outreach today."
+                action={
+                    <Button
+                        onClick={() =>
+                            window.location.href =
+                                "/dashboard/leads"
+                        }
+                    >
+                        + Add Lead
+                    </Button>
+                }
+            />
 
-      </div>
 
-      {/* Stats */}
+            {/* ================================================= */}
+            {/* STATS */}
+            {/* ================================================= */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="
+                grid
+                grid-cols-1
+                gap-4
+                sm:grid-cols-2
+                xl:grid-cols-3
+            ">
 
-        <StatsCard
+                <StatsCard
+                    title="Total Leads"
+                    value={data.totalLeads}
+                />
 
-          title="Total Leads"
+                <StatsCard
+                    title="Campaigns"
+                    value={data.totalCampaigns}
+                />
 
-          value={data.totalLeads}
+                <StatsCard
+                    title="Emails Sent"
+                    value={data.emailsSent}
+                />
 
-        />
+                <StatsCard
+                    title="Emails Opened"
+                    value={data.emailsOpened}
+                />
 
-        <StatsCard
+                <StatsCard
+                    title="Open Rate"
+                    value={`${data.openRate}%`}
+                />
 
-          title="Campaigns"
+                <StatsCard
+                    title="Meetings Booked"
+                    value={data.meetingsBooked}
+                />
 
-          value={data.totalCampaigns}
+            </div>
 
-        />
 
-        <StatsCard
+            {/* ================================================= */}
+            {/* MAIN OVERVIEW */}
+            {/* ================================================= */}
 
-          title="Emails Sent"
+            <div className="
+                grid
+                grid-cols-1
+                gap-6
+                xl:grid-cols-[1.4fr_1fr]
+            ">
 
-          value={data.emailsSent}
+                {/* PIPELINE */}
 
-        />
+                <Card>
 
-        <StatsCard
+                    <CardHeader>
 
-          title="Emails Opened"
+                        <CardTitle>
+                            Pipeline Overview
+                        </CardTitle>
 
-          value={data.emailsOpened}
+                        <CardDescription>
+                            Track how your leads are moving
+                            through the sales process.
+                        </CardDescription>
 
-        />
+                    </CardHeader>
 
-        <StatsCard
+                    <CardContent>
 
-          title="Open Rate"
+                        <PipelineCard
+                            pipeline={data.pipeline}
+                        />
 
-          value={`${data.openRate}%`}
+                    </CardContent>
 
-        />
+                </Card>
 
-        <StatsCard
 
-          title="Meetings Booked"
+                {/* RECENT ACTIVITY */}
 
-          value={data.meetingsBooked}
+                <Card>
 
-        />
+                    <CardHeader>
 
-      </div>
+                        <CardTitle>
+                            Recent Activity
+                        </CardTitle>
 
-      {/* Bottom Section */}
+                        <CardDescription>
+                            Latest activity across your CRM.
+                        </CardDescription>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    </CardHeader>
 
-        <PipelineCard
+                    <CardContent>
 
-          pipeline={data.pipeline}
+                        {data.recentActivities?.length ? (
 
-        />
+                            <RecentActivity
+                                activities={
+                                    data.recentActivities
+                                }
+                            />
 
-        <RecentActivity
+                        ) : (
 
-          activities={data.recentActivities}
+                            <EmptyState
+                                title="No recent activity"
+                                description="Activity will appear here as you work with your leads."
+                            />
 
-        />
+                        )}
 
-      </div>
+                    </CardContent>
 
-      <RecentCampaign
+                </Card>
 
-        campaigns={data.recentCampaigns}
+            </div>
 
-      />
 
-    </div>
+            {/* ================================================= */}
+            {/* RECENT CAMPAIGNS */}
+            {/* ================================================= */}
 
-  );
+            <Card>
 
+                <CardHeader>
+
+                    <CardTitle>
+                        Recent Campaigns
+                    </CardTitle>
+
+                    <CardDescription>
+                        Your latest outreach campaigns.
+                    </CardDescription>
+
+                </CardHeader>
+
+                <CardContent>
+
+                    {data.recentCampaigns?.length ? (
+
+                        <RecentCampaign
+                            campaigns={
+                                data.recentCampaigns
+                            }
+                        />
+
+                    ) : (
+
+                        <EmptyState
+                            title="No campaigns yet"
+                            description="Create your first campaign to start reaching out to leads."
+                            action={
+                                <Button
+                                    onClick={() =>
+                                        window.location.href =
+                                            "/dashboard/campaigns"
+                                    }
+                                >
+                                    Create Campaign
+                                </Button>
+                            }
+                        />
+
+                    )}
+
+                </CardContent>
+
+            </Card>
+
+        </div>
+    );
 }

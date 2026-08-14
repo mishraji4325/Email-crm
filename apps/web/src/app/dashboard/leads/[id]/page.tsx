@@ -16,6 +16,7 @@ import { assignLeadToCampaign, getCampaigns } from "@/services/campaign.service"
 import CampaignSection from "@/components/lead-details/campaignSequence";
 import { assignSequence, getSequences } from "@/services/sequence.service";
 import SequenceSection from "@/components/lead-details/sequenceSection";
+import { Button } from "@/components/ui/button";
 
 export default function leadPage() {
   const params = useParams();
@@ -91,7 +92,7 @@ export default function leadPage() {
         </label>
 
         
-        <div className="mb-3">
+        <div className="mb-3 mt-2">
           <NotesSection notes={data?.notes ?? []}
             onAdd={async (content) => {
               await mutation.mutateAsync({
@@ -140,14 +141,10 @@ export default function leadPage() {
 
 
         {data?.notes?.map((note: any) => (
-          <div key={note.id} className="border p-3 mt-2">
+          <div key={note.id} className="border p-3 mt-2 mb-2">
             {note.content}
           </div>
         ))}
-
-        <button onClick={bookMeeting} className="border px-4 py-2">
-          Book Meeting
-        </button>
 
         <ActivityTimeline activities={data?.activities ?? []} />
 
@@ -165,16 +162,22 @@ export default function leadPage() {
             alert("Email queued");
           }} />
 
-        <button
-          onClick={async () => {
-            await api.post(`/generate/${params.id}`);
+        <div className="mt-2 mb-2 flex items-center justify-between">
+          <Button
+            onClick={async () => {
+              await api.post(`/generate/${params.id}`);
 
-            alert("Generation started");
-          }}
-          className="border px-4 py-2"
-        >
-          Generate AI Email
-        </button>
+              alert("Generation started");
+            }}
+            className="border px-4 py-2"
+          >
+            Generate AI Email
+          </Button>
+
+          <Button onClick={bookMeeting} className="border px-4 py-2">
+            Book Meeting
+          </Button>
+        </div>
       </div>
     </div>
   );
