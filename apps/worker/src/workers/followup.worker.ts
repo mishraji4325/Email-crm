@@ -1,6 +1,6 @@
 import { Worker } from "bullmq";
-import { connection } from "../lib/redis";
-import { prisma } from "../lib/prisma";
+import { connection } from "../lib/redis.js";
+import { prisma } from "../lib/prisma.js";
 
 new Worker(
   "followup",
