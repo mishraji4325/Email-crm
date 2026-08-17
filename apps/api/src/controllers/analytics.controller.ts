@@ -156,11 +156,11 @@ export async function getAnalytics(
   }
 }
 
-export async function getPipelineAnalytics(req: Request, res: Response) {
+export async function getPipelineAnalytics(req: AuthRequest, res: Response) {
     const stats = {
         new: await prisma.lead.count({
             where: { status: "NEW",
-                userId:req.userId,
+                userId:(req as any).userId,
              }
         }),
 
@@ -179,7 +179,7 @@ export async function getPipelineAnalytics(req: Request, res: Response) {
     res.json(stats)
 }
 
-export async function getFunnelAnalytics(req: Request, res: Response) {
+export async function getFunnelAnalytics(req: AuthRequest, res: Response) {
     try {
         const newCount = await prisma.lead.count({
             where: {

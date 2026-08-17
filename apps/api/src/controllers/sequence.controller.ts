@@ -50,7 +50,7 @@ export async function getSequence(req: AuthRequest, res: Response ) {
         const sequence =
             await prisma.sequence.findFirst({
                 where: {
-                    id: req.params.id,
+                    id: req.params.id as string,
                     userId: req.userId,
                 },
 
@@ -110,8 +110,8 @@ export async function createStep(req: Request, res: Response) {
     try {
         const sequence = await prisma.sequence.findFirst({
             where: {
-                id: req.params.id,
-                userId: req.userId,
+                id: req.params.id as string,
+                userId: (req as any).userId ,
             },
         });
         
@@ -123,7 +123,7 @@ export async function createStep(req: Request, res: Response) {
         const { dayOffset, subject, body } = req.body;
         const step = await prisma.sequenceStep.create({
             data: {
-                sequenceId: req.params.id,
+                sequenceId: req.params.id as string,
                 dayOffset: Number(dayOffset),
                 subject,
                 body,
@@ -144,7 +144,7 @@ export async function updateStep(req: Request, res: Response) {
         const step =
             await prisma.sequenceStep.update({
                 where: {
-                    id: req.params.stepId
+                    id: req.params.stepId as string
                 },
                 data: {
                     dayOffset: Number(dayOffset),
@@ -166,7 +166,7 @@ export async function deleteStep(req: Request, res: Response) {
         const { stepId } = req.params;
         const step = await prisma.sequenceStep.delete({
             where: {
-                id: stepId,
+                id: stepId as string,
             },
         });
 
@@ -189,7 +189,7 @@ export async function assignLead( req: Request, res: Response ) {
         const assigned =
             await prisma.sequenceLead.create({
                 data: {
-                    sequenceId: req.params.id,
+                    sequenceId: req.params.id as string,
                     leadId,
                 },
             });
@@ -207,8 +207,8 @@ export async function removeLead( req: Request, res: Response ) {
         await prisma.sequenceLead.delete({
             where: {
                 sequenceId_leadId: {
-                    sequenceId: req.params.id,
-                    leadId: req.params.leadId,
+                    sequenceId: req.params.id as string,
+                    leadId: req.params.leadId as string,
                 },
             },
         });
@@ -228,7 +228,7 @@ export async function getSequenceLeads( req: Request, res: Response ) {
         const leads =
             await prisma.sequenceLead.findMany({
                 where: {
-                    sequenceId: req.params.id,
+                    sequenceId: req.params.id as string,
                 },
                 include: {
                     lead: true,

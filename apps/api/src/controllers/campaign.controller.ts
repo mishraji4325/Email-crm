@@ -47,7 +47,6 @@ export async function createCampaign( req: AuthRequest, res: Response ) {
 
 export async function getCampaign( req: AuthRequest, res: Response ) {
   try {
-
       if (!req.userId) {
           return res.status(401).json({
               message: "Unauthorized",
@@ -56,7 +55,7 @@ export async function getCampaign( req: AuthRequest, res: Response ) {
 
       const campaign = await prisma.campaign.findFirst({
           where: {
-              id: req.params.id,
+              id: req.params.id as string,
               userId: req.userId,
           },
 
@@ -99,7 +98,7 @@ export async function deleteCampaign( req: AuthRequest, res: Response ) {
 
       const campaign = await prisma.campaign.findFirst({
           where: {
-              id: req.params.id,
+              id: req.params.id as string,
               userId: req.userId,
           },
 
@@ -201,7 +200,7 @@ export async function addLeadsToCampaign( req: AuthRequest, res: Response ) {
 
       const campaign = await prisma.campaign.findFirst({
           where: {
-              id: campaignId,
+              id: campaignId as string,
               userId: req.userId,
           },
       });
@@ -234,7 +233,7 @@ export async function addLeadsToCampaign( req: AuthRequest, res: Response ) {
 
       await prisma.campaignLead.createMany({
           data: leadIds.map((leadId: string) => ({
-              campaignId,
+              campaignId: campaignId as string,
               leadId,
           })),
 
@@ -268,7 +267,7 @@ export async function getCampaignAnalytics( req: AuthRequest, res: Response ) {
 
       const campaign = await prisma.campaign.findFirst({
           where: {
-              id: campaignId,
+              id: campaignId as string,
               userId: req.userId,
           },
       });
@@ -281,7 +280,7 @@ export async function getCampaignAnalytics( req: AuthRequest, res: Response ) {
 
       const emails = await prisma.email.findMany({
           where: {
-              campaignId,
+              campaignId: campaignId as string,
           },
       });
 
@@ -294,7 +293,7 @@ export async function getCampaignAnalytics( req: AuthRequest, res: Response ) {
       const leadCount =
           await prisma.campaignLead.count({
               where: {
-                  campaignId,
+                  campaignId: campaignId as string,
               },
           });
 

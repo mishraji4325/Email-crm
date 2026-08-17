@@ -14,6 +14,7 @@ interface CreateEntityModalProps {
     title: string;
     buttonText: string;
     fields?: Field[];
+    initialValues?: Record<string, string>;
     onClose: () => void;
     onSubmit: (value: any) => void;
 }
@@ -23,6 +24,7 @@ export default function CreateEntityModal({
     title,
     buttonText,
     fields = [],
+    initialValues,
     onClose,
     onSubmit,
 }: CreateEntityModalProps) {
@@ -56,9 +58,9 @@ export default function CreateEntityModal({
       e.preventDefault();
   
       if (fields.length === 1) {
-  
-          const fieldName = fields[0].name;
-  
+
+          const fieldName = fields[0]!.name;
+
           const value =
               values[fieldName] || "";
   

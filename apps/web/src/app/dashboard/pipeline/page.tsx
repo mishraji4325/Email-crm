@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+
 
 import { getLeads } from "@/services/lead.service";
 import PipelineLeadCard from "@/components/dashboard/pipeline/pipelineLeadCard";
@@ -15,6 +15,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
 import EmptyState from "@/components/common/emptyState";
+import { useQuery } from "@tanstack/react-query";
 
 
 const stages = [
@@ -84,12 +85,8 @@ export default function PipelinePage() {
         isLoading,
         isError,
     } = useQuery({
-
-        queryKey: [
-            "pipeline-leads",
-        ],
-
-        queryFn: getLeads,
+        queryKey: ["pipeline-leads"],
+        queryFn: () => getLeads(),
 
     });
 

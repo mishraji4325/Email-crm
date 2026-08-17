@@ -7,8 +7,8 @@ export async function getDashboard(req:Request, res:Response){
         //--------------LEADS----------------
         const totalLeads = await prisma.lead.count({
             where:{
-                id: req.params.id,
-                userId: req.userId
+                id: req.params.id as string,
+                userId: (req as any ).userId
             }
         });
         const totalCampaigns = await prisma.campaign.count();

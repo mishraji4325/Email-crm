@@ -121,7 +121,7 @@ export async function getLeadsById(req: AuthRequest, res: Response) {
 
         const lead = await prisma.lead.findFirst({
             where: {
-                id: req.params.id,
+                id: req.params.id as string,
                 userId: req.userId,
             },
 
@@ -172,7 +172,7 @@ export async function updateLeadStatus( req: AuthRequest, res: Response ) {
 
         const lead = await prisma.lead.findFirst({
             where: {
-                id: req.params.id,
+                id: req.params.id as string,
                 userId: req.userId,
             },
         });
@@ -220,7 +220,7 @@ export async function getLeadActivities( req: AuthRequest, res: Response ) {
 
         const lead = await prisma.lead.findFirst({
             where: {
-                id: req.params.id,
+                id: req.params.id as string,
                 userId: req.userId,
             },
         });
@@ -263,7 +263,7 @@ export async function bookMeeting( req: AuthRequest, res: Response ) {
 
         const lead = await prisma.lead.findFirst({
             where: {
-                id: req.params.id,
+                id: req.params.id as string,
                 userId: req.userId,
             },
         });

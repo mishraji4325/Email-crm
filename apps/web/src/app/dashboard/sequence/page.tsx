@@ -558,13 +558,17 @@ export default function SequencesPage() {
 
                 title="Create Sequence"
 
-                placeholder="Sequence Name"
-
                 fields={[
                     {
                         name: "name",
                         label: "Sequence Name",
                     },
+                    {
+                        name:"description",
+                        label: "Description",
+                        type: "textarea",
+                        placeholder: "Enter a description for the sequence",
+                    }
                 ]}
 
                 buttonText={

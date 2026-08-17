@@ -137,6 +137,7 @@ model SequenceLead{
   leadId       String
   sequence     Sequence         @relation(fields:[sequenceId],references:[id])
   lead         Lead             @relation(fields:[leadId], references:[id])
+  @@unique([sequenceId, leadId])
 }
 
 model Notification {

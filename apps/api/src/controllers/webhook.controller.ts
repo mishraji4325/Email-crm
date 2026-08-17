@@ -23,7 +23,7 @@ export async function handleReplyWebhook(req:Request, res:Response){
                 id:email.leadId
             },
             data:{
-                status:"replied"
+                status:"REPLIED"
             }
         });
 

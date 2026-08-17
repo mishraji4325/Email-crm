@@ -24,7 +24,7 @@ export async function deleteNote(req:Request, res:Response){
     try{
         await prisma.note.delete({
             where:{
-                id:req.params.id,
+                id:req.params.id as string,
             },
         });
         res.json({message:"Note Deleted"})

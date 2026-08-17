@@ -53,6 +53,11 @@ export default function ImportPage() {
                 }
 
                 const firstRow = results.data[0];
+                if (!firstRow) {
+                    console.error("CSV file is empty");
+                    return;
+                }
+                
 
                 const keys = Object.keys(firstRow);
 
@@ -141,6 +146,9 @@ export default function ImportPage() {
         }
     }
 
+    const previewColumns = rows[0]
+        ? Object.keys(rows[0]).slice(0, 5)
+        : [];
 
     return (
         <div className="p-6">
@@ -387,9 +395,7 @@ export default function ImportPage() {
 
                                     <tr>
 
-                                        {Object.keys(
-                                            rows[0]
-                                        ).slice(0, 5).map(
+                                        {previewColumns.map(
                                             (key) => (
 
                                                 <th
@@ -431,11 +437,7 @@ export default function ImportPage() {
                                                     "
                                                 >
 
-                                                    {Object.keys(
-                                                        rows[0]
-                                                    )
-                                                        .slice(0, 5)
-                                                        .map(
+                                                    {previewColumns.map(
                                                             (key) => (
 
                                                                 <td

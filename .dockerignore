@@ -1,0 +1,45 @@
+# Dependencies
+**/node_modules
+node_modules
+.pnpm-store
+**/.pnpm
+
+# Build output
+**/.next
+**/dist
+**/.turbo
+.turbo
+.next
+dist
+
+# Git
+.git
+.github
+.gitignore
+
+# Environment/secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Coverage
+coverage
+**/coverage
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*.yml

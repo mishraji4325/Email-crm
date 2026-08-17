@@ -36,8 +36,8 @@ export default function CampaignDetailsPage() {
 
   const params = useParams();
   const router = useRouter();
-  const [generating, setGenerating] = useState("");
-  const [sending, setSending] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const { data: campaign, isLoading } = useQuery({
     queryKey: ["campaign", params.id],

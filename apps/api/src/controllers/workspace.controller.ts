@@ -42,7 +42,7 @@ export async function getWorkspace(req: Request, res: Response) {
         const workspace =
             await prisma.workspace.findUnique({
                 where: {
-                    id: req.params.id,
+                    id: req.params.id as string,
                 },
                 include: {
                     users: true,
@@ -87,7 +87,7 @@ export async function inviteMember(req: Request, res: Response) {
                     id: userId,
                 },
                 data: {
-                    workspaceId: req.params.id,
+                    workspaceId: req.params.id as string,
                 },
             });
         res.json(user);
@@ -105,7 +105,7 @@ export async function removeMember(req: Request, res: Response) {
         const user =
             await prisma.user.update({
                 where: {
-                    id: req.params.userId,
+                    id: req.params.userId as string,
                 },
 
                 data: {
@@ -155,7 +155,7 @@ export async function updateWorkspace(req: Request, res: Response) {
         const workspace =
             await prisma.workspace.update({
                 where: {
-                    id: req.params.id,
+                    id: req.params.id as string,
                 },
                 data: {
                     name,
@@ -175,7 +175,7 @@ export async function deleteWorkspace( req: Request, res: Response ) {
     try {
         await prisma.workspace.delete({
             where: {
-                id: req.params.id,
+                id: req.params.id as string,
             },
         });
         res.json({

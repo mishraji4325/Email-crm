@@ -9,6 +9,7 @@ import SequenceStepList from "@/components/dashboard/sequence/sequenceStepList";
 import { useState } from "react";
 import EntityModal from "@/components/common/entityModal";
 import SequenceLeadSection from "@/components/dashboard/sequence/sequenceLeadSection";
+import CreateEntityModal from "@/components/common/entityModal";
 
 export default function SequenceDetailsPage() {
     const params = useParams();
@@ -107,10 +108,9 @@ export default function SequenceDetailsPage() {
                 </button>
 
             </div>
-            <EntityModal
+            <CreateEntityModal
                 open={open}
                 title={editingStep ? "Edit Step" : "Add Step"}
-                placeholder="Step Name"
                 buttonText={editingStep ? "Update" : "Save"}
                 fields={[
                     {

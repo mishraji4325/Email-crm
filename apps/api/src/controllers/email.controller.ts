@@ -5,7 +5,7 @@ export async function getLeadEmails(req:Request, res:Response){
     try{
         const emails = await prisma.email.findMany({
             where: {
-                leadId: req.params.leadId
+                leadId: req.params.leadId as string,
             },
             orderBy:{
                 createdAt:"desc"
@@ -24,10 +24,10 @@ export async function updateEmail(req:Request, res:Response){
     try{
         const email = await prisma.email.update({
             where:{
-                id:req.params.id
+                id:req.params.id as string,
             },
             data:{
-                humanizeOutput :req.body.humanizeContent,
+                humanizedOutput :req.body.humanizeContent,
             }
         });
         res.json(email);

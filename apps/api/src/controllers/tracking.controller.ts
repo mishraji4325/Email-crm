@@ -7,7 +7,7 @@ export async function trackOpen(req:Request , res: Response){
     try{
         await prisma.email.update({
             where:{
-                id:req.params.emailId
+                id:req.params.emailId as string,
             },
             data:{
                 opened:true,

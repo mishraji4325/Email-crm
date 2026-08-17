@@ -2,6 +2,7 @@ interface EmptyStateProps {
     title: string;
     description?: string;
     icon?: string;
+    action?: React.ReactNode;
 }
 
 
@@ -9,6 +10,7 @@ export default function EmptyState({
     title,
     description,
     icon = "○",
+    action,
 }: EmptyStateProps) {
 
     return (
@@ -71,6 +73,12 @@ export default function EmptyState({
                     {description}
                 </p>
 
+            )}
+
+            {action && (
+                <div className="mt-4">
+                    {action}
+                </div>
             )}
 
         </div>
