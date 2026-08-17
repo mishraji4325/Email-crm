@@ -17,6 +17,7 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 
 COPY apps/worker/package.json apps/worker/package.json
+COPY apps/api/package.json apps/api/package.json
 
 RUN pnpm install --frozen-lockfile
 
@@ -28,6 +29,8 @@ RUN pnpm install --frozen-lockfile
 FROM deps AS builder
 
 COPY . .
+
+RUN pnpm --filter api exec prisma generate
 
 RUN pnpm --filter worker build
 

@@ -1,0 +1,32 @@
+services:
+  api:
+    image: ai-email-crm-api
+    container_name: ai-email-crm-api
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./apps/api/.env
+    restart: unless-stopped
+
+  worker:
+    image: ai-email-crm-worker
+    container_name: ai-email-crm-worker
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./apps/worker/.env
+    restart: unless-stopped
+    depends_on:
+      - api
+
+  web:
+    image: ai-email-crm-web
+    container_name: ai-email-crm-web
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/web/.env.local
+    restart: unless-stopped
+    depends_on:
+      - api
+      - worker
