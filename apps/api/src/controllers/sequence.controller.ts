@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { prisma } from "../lib/prisma";
-import { AuthRequest } from "../middleware/auth.middleware";
-import { createNotification } from "./notification.controller";
+import { prisma } from "../lib/prisma.js";
+import { AuthRequest } from "../middleware/auth.middleware.js";
+import { createNotification } from "./notification.controller.js";
 
 
 export async function createSequence(req: AuthRequest, res: Response) {

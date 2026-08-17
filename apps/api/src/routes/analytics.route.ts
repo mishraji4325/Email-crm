@@ -1,6 +1,6 @@
 import {Router} from 'express';
-import { getAnalytics, getPipelineAnalytics, getFunnelAnalytics } from '../controllers/analytics.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { getAnalytics, getPipelineAnalytics, getFunnelAnalytics } from '../controllers/analytics.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

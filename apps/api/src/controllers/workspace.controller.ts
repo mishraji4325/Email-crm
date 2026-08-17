@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma';
+import { prisma } from '../lib/prisma.js';
 import { Request, Response } from 'express';
 
 export async function createWorkspace(req: Request, res: Response) {

@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { AuthRequest } from "../middleware/auth.middleware";
+import { AuthRequest } from "../middleware/auth.middleware.js";
 
 export async function registerUser(req: Request, res: Response) {
   try {

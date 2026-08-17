@@ -1,8 +1,8 @@
 import {Router} from 'express';
 import { assignLead, createSequence, createStep, deleteStep, 
     getSequence, getSequenceLeads, getSequences, removeLead, 
-    updateStep } from '../controllers/sequence.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+    updateStep } from '../controllers/sequence.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

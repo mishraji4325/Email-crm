@@ -7,8 +7,8 @@ import {
     getCampaignAnalytics,
     getCampaign,
     deleteCampaign,
-} from "../controllers/campaign.controller";
-import { authMiddleware } from "../middleware/auth.middleware";
+} from "../controllers/campaign.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = Router();
 

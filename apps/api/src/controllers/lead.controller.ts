@@ -1,7 +1,7 @@
 import { Response } from "express";
-import { AuthRequest } from "../middleware/auth.middleware";
-import { prisma } from "../lib/prisma";
-import { createNotification } from "./notification.controller";
+import { AuthRequest } from "../middleware/auth.middleware.js";
+import { prisma } from "../lib/prisma.js";
+import { createNotification } from "./notification.controller.js";
 
 export async function createLead(req: AuthRequest, res: Response) {
     try {

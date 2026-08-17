@@ -2,8 +2,8 @@ import {Router} from 'express';
 import { createWorkspace, deleteWorkspace, getAvailableUsers, getWorkspace, 
     getWorkspaces, inviteMember, joinWorkspace, 
     removeMember, 
-    updateWorkspace} from '../controllers/workspace.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+    updateWorkspace} from '../controllers/workspace.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

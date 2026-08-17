@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import {emailQueue} from "../queues/email.queue";
+import {emailQueue} from "../queues/email.queue.js";
 
 const router = Router();
 
